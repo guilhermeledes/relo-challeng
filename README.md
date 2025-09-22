@@ -1,4 +1,4 @@
-# Gilded Rose
+# Smartrr Refactroring Exercise
 
 ## Requirements Specification
 
