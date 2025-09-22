@@ -1,4 +1,4 @@
-# Smartrr Refactroring Exercise
+# Smartrr Refactoring Exercise
 
 ## Requirements Specification
 
