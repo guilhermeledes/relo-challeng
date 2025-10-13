@@ -8,7 +8,7 @@
     "pretest": "rimraf app/**/*.js test/**/*.js",
     "test:jest": "jest",
     "test:jest:watch": "jest --watchAll",
-    "test:mocha": "nyc mocha --require ts-node/register test/mocha/**/*.ts",
+    "test:mocha": "nyc mocha -r ts-node/register -r tsconfig-paths/register test/mocha/**/*.ts",
     "test:vitest": "vitest --coverage"
   },
   "license": "MIT",
