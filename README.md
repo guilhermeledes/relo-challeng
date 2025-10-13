@@ -7,14 +7,14 @@ prominent city ran by a friendly innkeeper named Allison. We also buy and sell o
 Unfortunately, our goods are constantly degrading in `Quality` as they approach their sell by date.
 
 We have a system in place that updates our inventory for us. It was developed by a no-nonsense type named
-Leeroy, who has moved on to new adventures. Your task is to add the new feature to our system so that
+Leeroy, who has charged on to new adventures. Your task is to add the new feature to our system so that
 we can begin selling a new category of items. First an introduction to our system:
 
 - All `items` have a `SellIn` value which denotes the number of days we have to sell the `items`
 - All `items` have a `Quality` value which denotes how valuable the item is
-- At the end of each day our system lowers both values for every item
+- At the end of each day our system lowers both values for every item by `1`
 
-Pretty simple, right? Well this is where it gets interesting:
+Pretty simple, right? Well, this is where it gets interesting:
 
 - Once the sell by date has passed, `Quality` degrades twice as fast
 - The `Quality` of an item is never negative
@@ -77,5 +77,5 @@ Or with number of days as args:
 docker compose run --rm node npx ts-node test/golden-master-text-test.ts 10
 ```
 
-You should make sure the command shown above works when you execute it in a terminal before trying to use TextTest (see below).
+You should make sure the command shown above works when you execute it in a terminal before trying to use TextTest.
 
