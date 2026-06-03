@@ -45,7 +45,9 @@ docker compose run --rm node npm install
 
 ## Run the unit tests from the Command-Line
 
-There are two unit test frameworks to choose from, Jest and Mocha.
+There are three unit test frameworks to choose from: Jest, Mocha, and Vitest.
+
+### Jest
 
 ```sh
 docker compose run --rm node npm run test:jest
@@ -57,25 +59,20 @@ To run all tests in watch mode
 docker compose run --rm node npm run test:jest:watch
 ```
 
-Mocha
+### Mocha
 
 ```sh
 docker compose run --rm node npm run test:mocha
 ```
 
-
-## Run the TextTest fixture from the Command-Line
-
-_You may need to install `ts-node`_
+### Vitest
 
 ```sh
-docker compose run --rm node npx ts-node test/golden-master-text-test.ts
+docker compose run --rm node npm run test:vitest
 ```
 
-Or with number of days as args:
+To run all tests in watch mode
+
 ```sh
-docker compose run --rm node npx ts-node test/golden-master-text-test.ts 10
+docker compose run --rm node npm run test:vitest:watch
 ```
-
-You should make sure the command shown above works when you execute it in a terminal before trying to use TextTest.
-
