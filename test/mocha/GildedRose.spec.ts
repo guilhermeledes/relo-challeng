@@ -35,7 +35,7 @@ describe('GildedRose', () => {
       expect(item.quality).to.equal(0);
     });
 
-    it('quality degrades by 1 on the last sell day', () => {
+    it('quality degrades by 1 when there is one day remaining', () => {
       const itemMock = createItemMock('foo', 0, 10);
       const sut = new GildedRose([itemMock]);
 
