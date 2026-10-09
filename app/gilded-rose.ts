@@ -25,7 +25,7 @@ export class Item {
     if (this.category === CATEGORY.REGULAR) {
       this.updateRegular();
     } else {
-      this.updateAged();
+      this.updateNonRegular();
     }
   }
 
@@ -59,7 +59,7 @@ export class Item {
     }
   }
 
-  updateAged() {
+  updateNonRegular() {
     if (this.quality < 50) {
       this.quality = this.quality + 1
       if (this.category === CATEGORY.BACKSTAGE_PASSES) {
