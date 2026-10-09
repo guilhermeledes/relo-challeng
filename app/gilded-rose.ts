@@ -43,9 +43,7 @@ export class Item {
       }
 
       if (this.quality > 0) {
-        if (this.name != 'Sulfuras, Hand of Ragnaros') {
-          this.quality = this.quality - 1
-        }
+        this.quality = this.quality - 1
       }
 
     }
@@ -53,9 +51,7 @@ export class Item {
 
   updateRegular() {
     if (this.quality > 0) {
-      if (this.name != 'Sulfuras, Hand of Ragnaros') {
-        this.quality = this.quality - 1
-      }
+      this.quality = this.quality - 1
     }
   }
 
