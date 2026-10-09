@@ -9,7 +9,7 @@ export class Item {
   #currentQuality: number;
   category: Category;
 
-  constructor(name, sellIn, quality, category: Category = CATEGORY.REGULAR) {
+  constructor(name: string, sellIn: number, quality: number, category: Category = CATEGORY.REGULAR) {
     this.name = name;
     this.#currentSellIn = sellIn;
     this.#currentQuality = quality;

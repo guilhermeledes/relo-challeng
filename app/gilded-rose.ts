@@ -4,7 +4,7 @@ import { categoryStrategies } from './domain/strategies/category-strategies';
 export class GildedRose {
   items: Array<Item>;
 
-  constructor(items = [] as Array<Item>) {
+  constructor(items: Item[] = []) {
     this.items = items;
   }
 
