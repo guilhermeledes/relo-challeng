@@ -126,6 +126,22 @@ export class AgedCategoryStrategy implements CategoryStrategy {
   }
 }
 
+export class BackstagePassesCategoryStrategy implements CategoryStrategy {
+  update(item: Item): void {
+    if (item.sellIn <= 0) {
+      item.resetQuality();
+    } else if (item.sellIn <= 5) {
+      item.increaseQuality(3);
+    } else if (item.sellIn <= 10) {
+      item.increaseQuality(2);
+    } else {
+      item.increaseQuality(1);
+    }
+
+    item.decreaseSellIn();
+  }
+}
+
 class LegacyCategoryStrategy implements CategoryStrategy {
   update(item: Item): void {
     if (item.category === CATEGORY.LEGENDARY) {
@@ -142,7 +158,7 @@ const legacyStrategy = new LegacyCategoryStrategy();
 const categoryStrategies: Record<Category, CategoryStrategy> = {
   [CATEGORY.REGULAR]: new RegularCategoryStrategy(),
   [CATEGORY.AGES]: new AgedCategoryStrategy(),
-  [CATEGORY.BACKSTAGE_PASSES]: legacyStrategy,
+  [CATEGORY.BACKSTAGE_PASSES]: new BackstagePassesCategoryStrategy(),
   [CATEGORY.LEGENDARY]: legacyStrategy,
 };
 
