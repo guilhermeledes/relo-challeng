@@ -1,5 +1,8 @@
 import { CATEGORY, type Category } from './category';
 
+const MIN_QUALITY = 0;
+const MAX_NORMAL_QUALITY = 50;
+
 export class Item {
   name: string;
   private currentSellIn: number;
@@ -22,19 +25,19 @@ export class Item {
   }
 
   increaseQuality(amount: number) {
-    if (this.quality < 50) {
-      this.currentQuality = Math.min(50, this.quality + amount);
+    if (this.quality < MAX_NORMAL_QUALITY) {
+      this.currentQuality = Math.min(MAX_NORMAL_QUALITY, this.quality + amount);
     }
   }
 
   decreaseQuality(amount: number) {
-    if (this.quality > 0) {
-      this.currentQuality = Math.max(0, this.quality - amount);
+    if (this.quality > MIN_QUALITY) {
+      this.currentQuality = Math.max(MIN_QUALITY, this.quality - amount);
     }
   }
 
   resetQuality() {
-    this.currentQuality = 0;
+    this.currentQuality = MIN_QUALITY;
   }
 
   decreaseSellIn() {
