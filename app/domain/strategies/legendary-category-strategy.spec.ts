@@ -12,6 +12,7 @@ describe('LegendaryCategoryStrategy', () => {
 
         const result = strategy.update(state);
 
+        expect(result).toBe(state);
         expect(result.quality.value).toBe(80);
         expect(result.sellIn).toBe(5);
         expect(state.sellIn).toBe(5);
