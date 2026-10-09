@@ -9,7 +9,7 @@ export class Item {
 
   constructor(name: string, sellIn: number, quality: number, category: Category = CATEGORY.REGULAR) {
     this.name = name;
-    this.#currentState = { sellIn, quality: new Quality(quality) };
+    this.#currentState = Object.freeze({ sellIn, quality: new Quality(quality) });
     this.category = category;
   }
 
@@ -22,6 +22,7 @@ export class Item {
   }
 
   updateDaily(): void {
-    this.#currentState = categoryStrategies[this.category].update(this.#currentState);
+    const nextState = categoryStrategies[this.category].update(this.#currentState);
+    this.#currentState = Object.freeze({ sellIn: nextState.sellIn, quality: nextState.quality });
   }
 }
