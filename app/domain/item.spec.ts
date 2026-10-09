@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { CATEGORY } from '@/domain/category';
+import { CATEGORY } from '@/domain/strategies/category-strategies';
 import { Item } from '@/domain/item';
 
 describe('Given Item construction', () => {

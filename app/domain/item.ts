@@ -1,6 +1,5 @@
-import { CATEGORY, type Category } from './category';
 import { Quality } from './quality';
-import { categoryStrategies } from './strategies/category-strategies';
+import { CATEGORY, categoryStrategies, type Category } from './strategies/category-strategies';
 import type { DailyItemState } from './strategies/category-strategy';
 
 export class Item {

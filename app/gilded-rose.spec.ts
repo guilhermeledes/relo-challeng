@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { GildedRose } from './gilded-rose';
-import { CATEGORY } from './domain/category';
+import { CATEGORY } from './domain/strategies/category-strategies';
 import { Item } from './domain/item';
 
 describe('GildedRose', () => {
