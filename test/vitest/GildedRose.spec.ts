@@ -99,6 +99,34 @@ describe('GildedRose', () => {
 
       expect(item.quality).toBe(50);
     });
+
+    describe('given an aged item with one day remaining', () => {
+      describe('when the inventory is updated', () => {
+        it('then increases quality by 1 and leaves no days remaining', () => {
+          const itemMock = createItemMock('Aged Brie', 1, 20, CATEGORY.AGES);
+          const sut = new GildedRose([itemMock]);
+
+          const [item] = sut.updateInventory();
+
+          expect(item.quality).toBe(21);
+          expect(item.sellIn).toBe(0);
+        });
+      });
+    });
+
+    describe('given an expired aged item with quality 49', () => {
+      describe('when the inventory is updated', () => {
+        it('then caps quality at 50 and decreases sellIn', () => {
+          const itemMock = createItemMock('Aged Brie', 0, 49, CATEGORY.AGES);
+          const sut = new GildedRose([itemMock]);
+
+          const [item] = sut.updateInventory();
+
+          expect(item.quality).toBe(50);
+          expect(item.sellIn).toBe(-1);
+        });
+      });
+    });
   });
 
   describe('Backstage passes to a TAFKAL80ETC concert', () => {
