@@ -237,4 +237,158 @@ describe('GildedRose', () => {
       expect(item.sellIn).toBe(5);
     });
   });
+
+  describe('given a Regular item with a negative deadline', () => {
+    describe('when the inventory is updated', () => {
+      it('then degrades twice and advances its expired deadline', () => {
+        const item = createItemMock('foo', -1, 10, CATEGORY.REGULAR);
+        const sut = new GildedRose([item]);
+
+        sut.updateInventory();
+
+        expect(item.quality).toBe(8);
+        expect(item.sellIn).toBe(-2);
+      });
+    });
+  });
+
+  describe('given a Regular item already at zero quality after expiration', () => {
+    describe('when the inventory is updated', () => {
+      it('then preserves the quality floor and advances its deadline', () => {
+        const item = createItemMock('foo', -1, 0, CATEGORY.REGULAR);
+        const sut = new GildedRose([item]);
+
+        sut.updateInventory();
+
+        expect(item.quality).toBe(0);
+        expect(item.sellIn).toBe(-2);
+      });
+    });
+  });
+
+  describe('given an aged item with a negative deadline', () => {
+    describe('when the inventory is updated', () => {
+      it('then gains two quality points and advances its expired deadline', () => {
+        const item = createItemMock('Aged Brie', -1, 20, CATEGORY.AGES);
+        const sut = new GildedRose([item]);
+
+        sut.updateInventory();
+
+        expect(item.quality).toBe(22);
+        expect(item.sellIn).toBe(-2);
+      });
+    });
+  });
+
+  describe('given an aged item with quality 49 before expiration', () => {
+    describe('when the inventory is updated', () => {
+      it('then reaches quality 50 and reduces the remaining deadline', () => {
+        const item = createItemMock('Aged Brie', 5, 49, CATEGORY.AGES);
+        const sut = new GildedRose([item]);
+
+        sut.updateInventory();
+
+        expect(item.quality).toBe(50);
+        expect(item.sellIn).toBe(4);
+      });
+    });
+  });
+
+  describe('given an aged item at quality 50 after expiration', () => {
+    describe('when the inventory is updated', () => {
+      it('then preserves the quality ceiling and advances its deadline', () => {
+        const item = createItemMock('Aged Brie', 0, 50, CATEGORY.AGES);
+        const sut = new GildedRose([item]);
+
+        sut.updateInventory();
+
+        expect(item.quality).toBe(50);
+        expect(item.sellIn).toBe(-1);
+      });
+    });
+  });
+
+  describe('given a backstage pass with a negative deadline', () => {
+    describe('when the inventory is updated', () => {
+      it('then loses all quality and advances its expired deadline', () => {
+        const item = createItemMock('Backstage passes', -1, 20, CATEGORY.BACKSTAGE_PASSES);
+        const sut = new GildedRose([item]);
+
+        sut.updateInventory();
+
+        expect(item.quality).toBe(0);
+        expect(item.sellIn).toBe(-2);
+      });
+    });
+  });
+
+  describe('given a backstage pass near the ceiling with eleven days remaining', () => {
+    describe('when the inventory is updated', () => {
+      it('then reaches quality 50 and leaves ten days remaining', () => {
+        const item = createItemMock('Backstage passes', 11, 49, CATEGORY.BACKSTAGE_PASSES);
+        const sut = new GildedRose([item]);
+
+        sut.updateInventory();
+
+        expect(item.quality).toBe(50);
+        expect(item.sellIn).toBe(10);
+      });
+    });
+  });
+
+  describe('given a backstage pass near the ceiling with ten days remaining', () => {
+    describe('when the inventory is updated', () => {
+      it('then caps its two-point gain at quality 50 and reduces its deadline', () => {
+        const item = createItemMock('Backstage passes', 10, 49, CATEGORY.BACKSTAGE_PASSES);
+        const sut = new GildedRose([item]);
+
+        sut.updateInventory();
+
+        expect(item.quality).toBe(50);
+        expect(item.sellIn).toBe(9);
+      });
+    });
+  });
+
+  describe('given a backstage pass with quality 48 and five days remaining', () => {
+    describe('when the inventory is updated', () => {
+      it('then caps its three-point gain at quality 50 and reduces its deadline', () => {
+        const item = createItemMock('Backstage passes', 5, 48, CATEGORY.BACKSTAGE_PASSES);
+        const sut = new GildedRose([item]);
+
+        sut.updateInventory();
+
+        expect(item.quality).toBe(50);
+        expect(item.sellIn).toBe(4);
+      });
+    });
+  });
+
+  describe('given Sulfuras at quality 80 with no days remaining', () => {
+    describe('when the inventory is updated', () => {
+      it('then preserves its legendary quality and deadline', () => {
+        const item = createItemMock('Sulfuras, Hand of Ragnaros', 0, 80, CATEGORY.LEGENDARY);
+        const sut = new GildedRose([item]);
+
+        sut.updateInventory();
+
+        expect(item.quality).toBe(80);
+        expect(item.sellIn).toBe(0);
+      });
+    });
+  });
+
+  describe('given Sulfuras at quality 80 with a negative deadline', () => {
+    describe('when the inventory is updated', () => {
+      it('then preserves its legendary quality and expired deadline', () => {
+        const item = createItemMock('Sulfuras, Hand of Ragnaros', -1, 80, CATEGORY.LEGENDARY);
+        const sut = new GildedRose([item]);
+
+        sut.updateInventory();
+
+        expect(item.quality).toBe(80);
+        expect(item.sellIn).toBe(-1);
+      });
+    });
+  });
 });
