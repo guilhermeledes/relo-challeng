@@ -218,6 +218,135 @@ describe('GildedRose', () => {
     });
   });
 
+  describe('Conjured items', () => {
+    describe('given a conjured item before expiration', () => {
+      describe('when the inventory is updated', () => {
+        it('then decreases quality by 2 and sellIn by 1', () => {
+          const itemMock = createItemMock('Conjured Mana Cake', 5, 10, CATEGORY.CONJURED);
+          const sut = new GildedRose([itemMock]);
+
+          const [item] = sut.updateInventory();
+
+          expect(item.quality).toBe(8);
+          expect(item.sellIn).toBe(4);
+        });
+      });
+    });
+
+    describe('given a conjured item with no days remaining', () => {
+      describe('when the inventory is updated', () => {
+        it('then decreases quality by 4 and sellIn by 1', () => {
+          const itemMock = createItemMock('Conjured Mana Cake', 0, 10, CATEGORY.CONJURED);
+          const sut = new GildedRose([itemMock]);
+
+          const [item] = sut.updateInventory();
+
+          expect(item.quality).toBe(6);
+          expect(item.sellIn).toBe(-1);
+        });
+      });
+    });
+
+    describe('given a conjured item with a negative deadline', () => {
+      describe('when the inventory is updated', () => {
+        it('then decreases quality by 4 and advances its expired deadline', () => {
+          const itemMock = createItemMock('Conjured Mana Cake', -1, 10, CATEGORY.CONJURED);
+          const sut = new GildedRose([itemMock]);
+
+          const [item] = sut.updateInventory();
+
+          expect(item.quality).toBe(6);
+          expect(item.sellIn).toBe(-2);
+        });
+      });
+    });
+
+    describe('given a conjured item with one day remaining', () => {
+      describe('when the inventory is updated', () => {
+        it('then decreases quality by 2 and leaves no days remaining', () => {
+          const itemMock = createItemMock('Conjured Mana Cake', 1, 10, CATEGORY.CONJURED);
+          const sut = new GildedRose([itemMock]);
+
+          const [item] = sut.updateInventory();
+
+          expect(item.quality).toBe(8);
+          expect(item.sellIn).toBe(0);
+        });
+      });
+    });
+
+    describe('given an unexpired conjured item with quality 1', () => {
+      describe('when the inventory is updated', () => {
+        it('then stops quality at zero and reduces the remaining deadline', () => {
+          const itemMock = createItemMock('Conjured Mana Cake', 5, 1, CATEGORY.CONJURED);
+          const sut = new GildedRose([itemMock]);
+
+          const [item] = sut.updateInventory();
+
+          expect(item.quality).toBe(0);
+          expect(item.sellIn).toBe(4);
+        });
+      });
+    });
+
+    describe('given an expired conjured item with quality 3', () => {
+      describe('when the inventory is updated', () => {
+        it('then stops quality at zero and advances its expired deadline', () => {
+          const itemMock = createItemMock('Conjured Mana Cake', 0, 3, CATEGORY.CONJURED);
+          const sut = new GildedRose([itemMock]);
+
+          const [item] = sut.updateInventory();
+
+          expect(item.quality).toBe(0);
+          expect(item.sellIn).toBe(-1);
+        });
+      });
+    });
+
+    describe('given an expired conjured item already at zero quality', () => {
+      describe('when the inventory is updated', () => {
+        it('then preserves zero quality and advances its expired deadline', () => {
+          const itemMock = createItemMock('Conjured Mana Cake', -1, 0, CATEGORY.CONJURED);
+          const sut = new GildedRose([itemMock]);
+
+          const [item] = sut.updateInventory();
+
+          expect(item.quality).toBe(0);
+          expect(item.sellIn).toBe(-2);
+        });
+      });
+    });
+
+    describe('given a conjured item alongside a Regular item with one day remaining', () => {
+      describe('when the inventory is updated on successive days', () => {
+        it('then degrades Conjured twice as fast while preserving inventory references', () => {
+          const conjured = createItemMock('foo', 1, 10, CATEGORY.CONJURED);
+          const regular = createItemMock('Conjured Mana Cake', 1, 10);
+          const items = [conjured, regular];
+          const sut = new GildedRose(items);
+
+          const firstDay = sut.updateInventory();
+
+          expect(firstDay).toBe(items);
+          expect(conjured.quality).toBe(8);
+          expect(conjured.sellIn).toBe(0);
+          expect(regular.quality).toBe(9);
+          expect(regular.sellIn).toBe(0);
+
+          const secondDay = sut.updateInventory();
+
+          expect(secondDay).toBe(items);
+          expect(secondDay[0]).toBe(conjured);
+          expect(secondDay[1]).toBe(regular);
+          expect(conjured.quality).toBe(4);
+          expect(conjured.sellIn).toBe(-1);
+          expect(regular.quality).toBe(7);
+          expect(regular.sellIn).toBe(-1);
+        });
+      });
+    });
+  });
+
   describe('Sulfuras, Hand of Ragnaros', () => {
     it('quality never changes', () => {
       const itemMock = createItemMock('Sulfuras, Hand of Ragnaros', 5, 80, CATEGORY.LEGENDARY);

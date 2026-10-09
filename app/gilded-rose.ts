@@ -3,6 +3,7 @@ export const CATEGORY = {
   AGES: 'Ages',
   BACKSTAGE_PASSES: 'BackstagePasses',
   REGULAR: 'Regular',
+  CONJURED: 'Conjured',
 } as const;
 
 export type Category = typeof CATEGORY[keyof typeof CATEGORY];
@@ -89,11 +90,19 @@ export class LegendaryCategoryStrategy implements CategoryStrategy {
   }
 }
 
+export class ConjuredCategoryStrategy implements CategoryStrategy {
+  update(item: Item): void {
+    item.decreaseQuality(item.sellIn > 0 ? 2 : 4);
+    item.decreaseSellIn();
+  }
+}
+
 const categoryStrategies: Record<Category, CategoryStrategy> = {
   [CATEGORY.REGULAR]: new RegularCategoryStrategy(),
   [CATEGORY.AGES]: new AgedCategoryStrategy(),
   [CATEGORY.BACKSTAGE_PASSES]: new BackstagePassesCategoryStrategy(),
   [CATEGORY.LEGENDARY]: new LegendaryCategoryStrategy(),
+  [CATEGORY.CONJURED]: new ConjuredCategoryStrategy(),
 };
 
 export class GildedRose {
