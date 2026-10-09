@@ -174,6 +174,48 @@ describe('GildedRose', () => {
 
       expect(item.quality).toBe(50);
     });
+
+    describe('given a backstage pass with eleven days remaining', () => {
+      describe('when the inventory is updated', () => {
+        it('then increases quality by 1 and leaves ten days remaining', () => {
+          const itemMock = createItemMock('Backstage passes to a TAFKAL80ETC concert', 11, 20, CATEGORY.BACKSTAGE_PASSES);
+          const sut = new GildedRose([itemMock]);
+
+          const [item] = sut.updateInventory();
+
+          expect(item.quality).toBe(21);
+          expect(item.sellIn).toBe(10);
+        });
+      });
+    });
+
+    describe('given a backstage pass with six days remaining', () => {
+      describe('when the inventory is updated', () => {
+        it('then increases quality by 2 and leaves five days remaining', () => {
+          const itemMock = createItemMock('Backstage passes to a TAFKAL80ETC concert', 6, 20, CATEGORY.BACKSTAGE_PASSES);
+          const sut = new GildedRose([itemMock]);
+
+          const [item] = sut.updateInventory();
+
+          expect(item.quality).toBe(22);
+          expect(item.sellIn).toBe(5);
+        });
+      });
+    });
+
+    describe('given a backstage pass with one day remaining', () => {
+      describe('when the inventory is updated', () => {
+        it('then increases quality by 3 and leaves no days remaining', () => {
+          const itemMock = createItemMock('Backstage passes to a TAFKAL80ETC concert', 1, 20, CATEGORY.BACKSTAGE_PASSES);
+          const sut = new GildedRose([itemMock]);
+
+          const [item] = sut.updateInventory();
+
+          expect(item.quality).toBe(23);
+          expect(item.sellIn).toBe(0);
+        });
+      });
+    });
   });
 
   describe('Sulfuras, Hand of Ragnaros', () => {
