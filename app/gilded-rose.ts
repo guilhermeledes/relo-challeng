@@ -24,9 +24,10 @@ export class Item {
   updateQuality() {
     if (this.category === CATEGORY.REGULAR) {
       this.updateRegular();
-    } else {
-      this.updateNonRegular();
+      return;
     }
+    
+    this.updateNonRegular();
   }
 
   updateSellIn() {
