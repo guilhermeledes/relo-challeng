@@ -1,52 +1,11 @@
 import { CATEGORY, type Category } from './domain/category';
 import type { Item } from './domain/item';
-
-export interface CategoryStrategy {
-  update(item: Item): void;
-}
-
-export class RegularCategoryStrategy implements CategoryStrategy {
-  update(item: Item): void {
-    item.decreaseQuality(item.sellIn > 0 ? 1 : 2);
-    item.decreaseSellIn();
-  }
-}
-
-export class AgedCategoryStrategy implements CategoryStrategy {
-  update(item: Item): void {
-    item.increaseQuality(item.sellIn > 0 ? 1 : 2);
-    item.decreaseSellIn();
-  }
-}
-
-export class BackstagePassesCategoryStrategy implements CategoryStrategy {
-  update(item: Item): void {
-    if (item.sellIn <= 0) {
-      item.resetQuality();
-    } else if (item.sellIn <= 5) {
-      item.increaseQuality(3);
-    } else if (item.sellIn <= 10) {
-      item.increaseQuality(2);
-    } else {
-      item.increaseQuality(1);
-    }
-
-    item.decreaseSellIn();
-  }
-}
-
-export class LegendaryCategoryStrategy implements CategoryStrategy {
-  update(_item: Item): void {
-    // Legendary items keep their quality and deadline unchanged.
-  }
-}
-
-export class ConjuredCategoryStrategy implements CategoryStrategy {
-  update(item: Item): void {
-    item.decreaseQuality(item.sellIn > 0 ? 2 : 4);
-    item.decreaseSellIn();
-  }
-}
+import type { CategoryStrategy } from './domain/strategies/category-strategy';
+import { RegularCategoryStrategy } from './domain/strategies/regular-category-strategy';
+import { AgedCategoryStrategy } from './domain/strategies/aged-category-strategy';
+import { BackstagePassesCategoryStrategy } from './domain/strategies/backstage-passes-category-strategy';
+import { LegendaryCategoryStrategy } from './domain/strategies/legendary-category-strategy';
+import { ConjuredCategoryStrategy } from './domain/strategies/conjured-category-strategy';
 
 const categoryStrategies: Record<Category, CategoryStrategy> = {
   [CATEGORY.REGULAR]: new RegularCategoryStrategy(),
