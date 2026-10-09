@@ -1,4 +1,3 @@
-
 export const CATEGORY = {
   LEGENDARY: 'Legendary',
   AGES: 'Ages',
@@ -48,64 +47,6 @@ export class Item {
   decreaseSellIn() {
     this.currentSellIn -= 1;
   }
-
-  updateQuality() {
-    if (this.category === CATEGORY.REGULAR) {
-      this.updateRegular();
-      return;
-    }
-    
-    this.updateNonRegular();
-  }
-
-  updateSellIn() {
-    this.decreaseSellIn();
-
-    if (this.sellIn < 0) {
-
-      if (this.category === CATEGORY.AGES) {
-        if (this.quality < 50) {
-          this.increaseQuality(1);
-        }
-        return
-      }
-
-      if (this.category === CATEGORY.BACKSTAGE_PASSES) {
-        this.resetQuality();
-        return
-      }
-
-      if (this.quality > 0) {
-        this.decreaseQuality(1);
-      }
-
-    }
-  }
-
-  updateRegular() {
-    if (this.quality > 0) {
-      this.decreaseQuality(1);
-    }
-  }
-
-  updateNonRegular() {
-    if (this.quality < 50) {
-      this.increaseQuality(1);
-      if (this.category === CATEGORY.BACKSTAGE_PASSES) {
-        if (this.sellIn < 11) {
-          if (this.quality < 50) {
-            this.increaseQuality(1);
-          }
-        }
-        if (this.sellIn < 6) {
-          if (this.quality < 50) {
-            this.increaseQuality(1);
-          }
-        }
-      }
-    }
-
-  }
 }
 
 export interface CategoryStrategy {
@@ -148,19 +89,6 @@ export class LegendaryCategoryStrategy implements CategoryStrategy {
   }
 }
 
-class LegacyCategoryStrategy implements CategoryStrategy {
-  update(item: Item): void {
-    if (item.category === CATEGORY.LEGENDARY) {
-      return;
-    }
-
-    item.updateQuality();
-    item.updateSellIn();
-  }
-}
-
-const legacyStrategy = new LegacyCategoryStrategy();
-
 const categoryStrategies: Record<Category, CategoryStrategy> = {
   [CATEGORY.REGULAR]: new RegularCategoryStrategy(),
   [CATEGORY.AGES]: new AgedCategoryStrategy(),
@@ -182,5 +110,4 @@ export class GildedRose {
 
     return this.items;
   }
-
 }
