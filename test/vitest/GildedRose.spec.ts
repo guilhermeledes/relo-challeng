@@ -42,6 +42,20 @@ describe('GildedRose', () => {
 
       expect(item.quality).toBe(9);
     });
+
+    describe('given an item with no days remaining', () => {
+      describe('when the inventory is updated', () => {
+        it('then decreases quality by 2 and sellIn by 1', () => {
+          const itemMock = createItemMock('foo', 0, 10);
+          const sut = new GildedRose([itemMock]);
+
+          const [item] = sut.updateInventory();
+
+          expect(item.quality).toBe(8);
+          expect(item.sellIn).toBe(-1);
+        });
+      });
+    });
   });
 
   describe('Aged Brie', () => {
