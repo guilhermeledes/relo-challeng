@@ -1,9 +1,10 @@
-import type { Item } from '../item';
-import type { CategoryStrategy } from './category-strategy';
+import type { CategoryStrategy, DailyItemState } from './category-strategy';
 
 export class ConjuredCategoryStrategy implements CategoryStrategy {
-  update(item: Item): void {
-    item.decreaseQuality(item.sellIn > 0 ? 2 : 4);
-    item.decreaseSellIn();
+  update(state: DailyItemState): DailyItemState {
+    return {
+      sellIn: state.sellIn - 1,
+      quality: state.quality.decrease(state.sellIn > 0 ? 2 : 4),
+    };
   }
 }

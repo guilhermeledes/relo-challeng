@@ -1,21 +1,21 @@
-import type { Item } from '../item';
-import type { CategoryStrategy } from './category-strategy';
+import type { CategoryStrategy, DailyItemState } from './category-strategy';
 
 const FINAL_CONCERT_DAYS = 5;
 const NEAR_CONCERT_DAYS = 10;
 
 export class BackstagePassesCategoryStrategy implements CategoryStrategy {
-  update(item: Item): void {
-    if (item.sellIn <= 0) {
-      item.resetQuality();
-    } else if (item.sellIn <= FINAL_CONCERT_DAYS) {
-      item.increaseQuality(3);
-    } else if (item.sellIn <= NEAR_CONCERT_DAYS) {
-      item.increaseQuality(2);
+  update(state: DailyItemState): DailyItemState {
+    let quality;
+    if (state.sellIn <= 0) {
+      quality = state.quality.reset();
+    } else if (state.sellIn <= FINAL_CONCERT_DAYS) {
+      quality = state.quality.increase(3);
+    } else if (state.sellIn <= NEAR_CONCERT_DAYS) {
+      quality = state.quality.increase(2);
     } else {
-      item.increaseQuality(1);
+      quality = state.quality.increase(1);
     }
 
-    item.decreaseSellIn();
+    return { sellIn: state.sellIn - 1, quality };
   }
 }

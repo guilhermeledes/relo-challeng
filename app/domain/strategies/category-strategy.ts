@@ -1,5 +1,10 @@
-import type { Item } from '../item';
+import type { Quality } from '../quality';
+
+export interface DailyItemState {
+  readonly sellIn: number;
+  readonly quality: Quality;
+}
 
 export interface CategoryStrategy {
-  update(item: Item): void;
+  update(state: DailyItemState): DailyItemState;
 }

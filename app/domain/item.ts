@@ -1,40 +1,28 @@
 import { CATEGORY, type Category } from './category';
 import { Quality } from './quality';
+import { categoryStrategies } from './strategies/category-strategies';
+import type { DailyItemState } from './strategies/category-strategy';
 
 export class Item {
   name: string;
-  #currentSellIn: number;
-  #currentQuality: Quality;
+  #currentState: DailyItemState;
   category: Category;
 
   constructor(name: string, sellIn: number, quality: number, category: Category = CATEGORY.REGULAR) {
     this.name = name;
-    this.#currentSellIn = sellIn;
-    this.#currentQuality = new Quality(quality);
+    this.#currentState = { sellIn, quality: new Quality(quality) };
     this.category = category;
   }
 
   get sellIn(): number {
-    return this.#currentSellIn;
+    return this.#currentState.sellIn;
   }
 
   get quality(): number {
-    return this.#currentQuality.value;
+    return this.#currentState.quality.value;
   }
 
-  increaseQuality(amount: number) {
-    this.#currentQuality = this.#currentQuality.increase(amount);
-  }
-
-  decreaseQuality(amount: number) {
-    this.#currentQuality = this.#currentQuality.decrease(amount);
-  }
-
-  resetQuality() {
-    this.#currentQuality = this.#currentQuality.reset();
-  }
-
-  decreaseSellIn() {
-    this.#currentSellIn -= 1;
+  updateDaily(): void {
+    this.#currentState = categoryStrategies[this.category].update(this.#currentState);
   }
 }

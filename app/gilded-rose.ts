@@ -1,5 +1,4 @@
 import type { Item } from './domain/item';
-import { categoryStrategies } from './domain/strategies/category-strategies';
 
 export class GildedRose {
   items: Array<Item>;
@@ -10,7 +9,7 @@ export class GildedRose {
 
   updateInventory() {
     this.items.forEach(item => {
-      categoryStrategies[item.category].update(item);
+      item.updateDaily();
     });
 
     return this.items;

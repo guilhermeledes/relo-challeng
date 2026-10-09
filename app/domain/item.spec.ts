@@ -32,90 +32,156 @@ describe('Given Item construction', () => {
   });
 });
 
-describe('Given a quality increase', () => {
-  describe('When Ages quality is 49 and the increase is 2', () => {
-    it('Then quality stops at 50', () => {
-      const item = new Item('Brie', 5, 49, CATEGORY.AGES);
+describe('Given updateDaily', () => {
+  describe('When Regular has 5 days remaining and quality 10', () => {
+    it('Then applies the next quality and deadline without a result', () => {
+      const item = new Item('Bread', 5, 10);
 
-      item.increaseQuality(2);
+      const result = item.updateDaily();
 
-      expect(item.quality).toBe(50);
+      expect(item.quality).toBe(9);
+      expect(item.sellIn).toBe(4);
+      expect(result).toBeUndefined();
     });
   });
 
-  describe('When Ages quality is 50 and the increase is 1', () => {
-    it('Then quality stays at 50', () => {
-      const item = new Item('Brie', 5, 50, CATEGORY.AGES);
+  describe('When Ages has 5 days remaining and quality 20', () => {
+    it('Then increases quality and reduces the deadline', () => {
+      const item = new Item('Ordinary name', 5, 20, CATEGORY.AGES);
 
-      item.increaseQuality(1);
+      item.updateDaily();
 
-      expect(item.quality).toBe(50);
+      expect(item.quality).toBe(21);
+      expect(item.sellIn).toBe(4);
     });
   });
 
-  describe('When Regular quality is 80 and the increase is 1', () => {
-    it('Then initial quality is preserved', () => {
-      const item = new Item('Unchanged', 5, 80);
+  describe('When BackstagePasses has 5 days remaining and quality 20', () => {
+    it('Then applies its concert gain and reduces the deadline', () => {
+      const item = new Item('Ordinary name', 5, 20, CATEGORY.BACKSTAGE_PASSES);
 
-      item.increaseQuality(1);
+      item.updateDaily();
+
+      expect(item.quality).toBe(23);
+      expect(item.sellIn).toBe(4);
+    });
+  });
+
+  describe('When Legendary has an expired deadline and quality 80', () => {
+    it('Then preserves quality and the expired deadline', () => {
+      const item = new Item('Ordinary name', -1, 80, CATEGORY.LEGENDARY);
+
+      item.updateDaily();
 
       expect(item.quality).toBe(80);
+      expect(item.sellIn).toBe(-1);
     });
   });
-});
 
-describe('Given a quality decrease', () => {
-  describe('When Regular quality is 1 and the decrease is 2', () => {
-    it('Then quality stops at zero', () => {
-      const item = new Item('Bread', 5, 1);
+  describe('When Conjured has 5 days remaining and quality 10', () => {
+    it('Then applies its doubled loss and reduces the deadline', () => {
+      const item = new Item('Ordinary name', 5, 10, CATEGORY.CONJURED);
 
-      item.decreaseQuality(2);
+      item.updateDaily();
+
+      expect(item.quality).toBe(8);
+      expect(item.sellIn).toBe(4);
+    });
+  });
+
+  describe('When Regular has 5 days remaining and quality 80', () => {
+    it('Then reduces quality above the normal ceiling to 79', () => {
+      const item = new Item('Ordinary name', 5, 80, CATEGORY.REGULAR);
+
+      item.updateDaily();
+
+      expect(item.quality).toBe(79);
+      expect(item.sellIn).toBe(4);
+    });
+  });
+
+  describe('When Ages has 5 days remaining and quality 80', () => {
+    it('Then preserves quality above the normal ceiling', () => {
+      const item = new Item('Ordinary name', 5, 80, CATEGORY.AGES);
+
+      item.updateDaily();
+
+      expect(item.quality).toBe(80);
+      expect(item.sellIn).toBe(4);
+    });
+  });
+
+  describe('When Ages has 5 days remaining and quality -1', () => {
+    it('Then increases negative quality to zero', () => {
+      const item = new Item('Ordinary name', 5, -1, CATEGORY.AGES);
+
+      item.updateDaily();
 
       expect(item.quality).toBe(0);
+      expect(item.sellIn).toBe(4);
     });
   });
 
-  describe('When Regular quality is zero and the decrease is 1', () => {
-    it('Then quality stays at zero', () => {
-      const item = new Item('Bread', 5, 0);
+  describe('When Regular has 5 days remaining and quality -1', () => {
+    it('Then preserves negative quality', () => {
+      const item = new Item('Ordinary name', 5, -1, CATEGORY.REGULAR);
 
-      item.decreaseQuality(1);
-
-      expect(item.quality).toBe(0);
-    });
-  });
-
-  describe('When Regular quality is -1 and the decrease is 1', () => {
-    it('Then initial quality is preserved', () => {
-      const item = new Item('Unchanged', 5, -1);
-
-      item.decreaseQuality(1);
+      item.updateDaily();
 
       expect(item.quality).toBe(-1);
+      expect(item.sellIn).toBe(4);
     });
   });
-});
 
-describe('Given a quality reset', () => {
-  describe('When BackstagePasses sellIn is zero and quality is 30', () => {
-    it('Then quality becomes zero', () => {
-      const item = new Item('Pass', 0, 30, CATEGORY.BACKSTAGE_PASSES);
+  describe('When BackstagePasses has no days remaining and quality -1', () => {
+    it('Then resets negative quality after the concert', () => {
+      const item = new Item('Ordinary name', 0, -1, CATEGORY.BACKSTAGE_PASSES);
 
-      item.resetQuality();
+      item.updateDaily();
 
       expect(item.quality).toBe(0);
+      expect(item.sellIn).toBe(-1);
     });
   });
-});
 
-describe('Given a deadline decrease', () => {
-  describe('When Regular sellIn is -1 and quality is 10', () => {
-    it('Then sellIn decreases to -2', () => {
-      const item = new Item('Bread', -1, 10);
+  describe('When BackstagePasses has an expired deadline and quality 80', () => {
+    it('Then resets quality above the ceiling after the concert', () => {
+      const item = new Item('Ordinary name', -1, 80, CATEGORY.BACKSTAGE_PASSES);
 
-      item.decreaseSellIn();
+      item.updateDaily();
 
+      expect(item.quality).toBe(0);
       expect(item.sellIn).toBe(-2);
+    });
+  });
+
+  describe('When Regular has an expired deadline and quality 10', () => {
+    it('Then advances the expired deadline and applies its expired loss', () => {
+      const item = new Item('Ordinary name', -1, 10, CATEGORY.REGULAR);
+
+      item.updateDaily();
+
+      expect(item.quality).toBe(8);
+      expect(item.sellIn).toBe(-2);
+    });
+  });
+  describe('When Category changes from Regular to Ages between days', () => {
+    it('Then applies the current Category to each daily state', () => {
+      const item = new Item('Bread', 1, 10);
+
+      item.updateDaily();
+
+      expect(item.quality).toBe(9);
+      expect(item.sellIn).toBe(0);
+
+      item.category = CATEGORY.AGES;
+      item.name = 'Brie';
+      item.updateDaily();
+
+      expect(item.quality).toBe(11);
+      expect(item.sellIn).toBe(-1);
+      expect(item.category).toBe(CATEGORY.AGES);
+      expect(item.name).toBe('Brie');
     });
   });
 });
