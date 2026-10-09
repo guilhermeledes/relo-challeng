@@ -7,4 +7,3 @@ export const CATEGORY = Object.freeze({
 } as const);
 
 export type Category = typeof CATEGORY[keyof typeof CATEGORY];
-
