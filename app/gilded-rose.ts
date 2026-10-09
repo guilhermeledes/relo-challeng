@@ -108,6 +108,30 @@ export class Item {
   }
 }
 
+export interface CategoryStrategy {
+  update(item: Item): void;
+}
+
+class LegacyCategoryStrategy implements CategoryStrategy {
+  update(item: Item): void {
+    if (item.category === CATEGORY.LEGENDARY) {
+      return;
+    }
+
+    item.updateQuality();
+    item.updateSellIn();
+  }
+}
+
+const legacyStrategy = new LegacyCategoryStrategy();
+
+const categoryStrategies: Record<Category, CategoryStrategy> = {
+  [CATEGORY.REGULAR]: legacyStrategy,
+  [CATEGORY.AGES]: legacyStrategy,
+  [CATEGORY.BACKSTAGE_PASSES]: legacyStrategy,
+  [CATEGORY.LEGENDARY]: legacyStrategy,
+};
+
 export class GildedRose {
   items: Array<Item>;
 
@@ -117,11 +141,7 @@ export class GildedRose {
 
   updateInventory() {
     this.items.forEach(item => {
-      if (item.category === CATEGORY.LEGENDARY) {
-        return;
-      }
-      item.updateQuality();
-      item.updateSellIn();
+      categoryStrategies[item.category].update(item);
     });
 
     return this.items;
