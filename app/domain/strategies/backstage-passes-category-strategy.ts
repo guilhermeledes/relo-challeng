@@ -1,9 +1,14 @@
+import { CATEGORY, type Category } from '../category';
 import type { CategoryStrategy, DailyItemState } from './category-strategy';
 
 const FINAL_CONCERT_DAYS = 5;
 const NEAR_CONCERT_DAYS = 10;
 
 export class BackstagePassesCategoryStrategy implements CategoryStrategy {
+  get category(): Category {
+    return CATEGORY.BACKSTAGE_PASSES;
+  }
+
   update(state: DailyItemState): DailyItemState {
     let quality;
     if (state.sellIn <= 0) {

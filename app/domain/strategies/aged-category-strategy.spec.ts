@@ -118,3 +118,26 @@ describe('AgedCategoryStrategy', () => {
     });
   });
 });
+
+describe('Given Ages Category identification', () => {
+  describe('When a Ages Strategy is created', () => {
+    it('Then identifies itself as Ages', () => {
+      const strategy = new AgedCategoryStrategy();
+
+      expect(strategy.category).toBe('Ages');
+    });
+  });
+});
+
+describe('Given Ages Category identification', () => {
+  describe('When replacing its Category is attempted', () => {
+    it('Then rejects the write and preserves Ages', () => {
+      const strategy = new AgedCategoryStrategy();
+
+      const written = Reflect.set(strategy, 'category', 'Regular');
+
+      expect(written).toBe(false);
+      expect(strategy.category).toBe('Ages');
+    });
+  });
+});

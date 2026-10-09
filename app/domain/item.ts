@@ -1,16 +1,24 @@
 import { Quality } from './quality';
-import { CATEGORY, updateDailyByCategory, type Category } from './strategies/category-strategies';
-import type { DailyItemState } from './strategies/category-strategy';
+import { CATEGORY, selectStrategyByCategory, type Category } from './strategies/category-strategies';
+import type { CategoryStrategy, DailyItemState } from './strategies/category-strategy';
 
 export class Item {
   name: string;
   #currentState: DailyItemState;
-  category: Category;
+  #strategy: CategoryStrategy;
 
   constructor(name: string, sellIn: number, quality: number, category: Category = CATEGORY.REGULAR) {
     this.name = name;
     this.#currentState = Object.freeze({ sellIn, quality: new Quality(quality) });
-    this.category = category;
+    this.#strategy = selectStrategyByCategory(category);
+  }
+
+  get category(): Category {
+    return this.#strategy.category;
+  }
+
+  set category(category: Category) {
+    this.#strategy = selectStrategyByCategory(category);
   }
 
   get sellIn(): number {
@@ -22,7 +30,7 @@ export class Item {
   }
 
   updateDaily(): void {
-    const nextState = updateDailyByCategory(this.category, this.#currentState);
+    const nextState = this.#strategy.update(this.#currentState);
     this.#currentState = Object.freeze({ sellIn: nextState.sellIn, quality: nextState.quality });
   }
 }

@@ -76,3 +76,26 @@ describe('LegendaryCategoryStrategy', () => {
     });
   });
 });
+
+describe('Given Legendary Category identification', () => {
+  describe('When a Legendary Strategy is created', () => {
+    it('Then identifies itself as Legendary', () => {
+      const strategy = new LegendaryCategoryStrategy();
+
+      expect(strategy.category).toBe('Legendary');
+    });
+  });
+});
+
+describe('Given Legendary Category identification', () => {
+  describe('When replacing its Category is attempted', () => {
+    it('Then rejects the write and preserves Legendary', () => {
+      const strategy = new LegendaryCategoryStrategy();
+
+      const written = Reflect.set(strategy, 'category', 'Regular');
+
+      expect(written).toBe(false);
+      expect(strategy.category).toBe('Legendary');
+    });
+  });
+});

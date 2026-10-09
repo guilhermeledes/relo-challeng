@@ -174,3 +174,26 @@ describe('BackstagePassesCategoryStrategy', () => {
     });
   });
 });
+
+describe('Given BackstagePasses Category identification', () => {
+  describe('When a BackstagePasses Strategy is created', () => {
+    it('Then identifies itself as BackstagePasses', () => {
+      const strategy = new BackstagePassesCategoryStrategy();
+
+      expect(strategy.category).toBe('BackstagePasses');
+    });
+  });
+});
+
+describe('Given BackstagePasses Category identification', () => {
+  describe('When replacing its Category is attempted', () => {
+    it('Then rejects the write and preserves BackstagePasses', () => {
+      const strategy = new BackstagePassesCategoryStrategy();
+
+      const written = Reflect.set(strategy, 'category', 'Regular');
+
+      expect(written).toBe(false);
+      expect(strategy.category).toBe('BackstagePasses');
+    });
+  });
+});

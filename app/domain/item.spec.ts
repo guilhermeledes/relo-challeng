@@ -39,6 +39,7 @@ describe('Given updateDaily', () => {
 
       const result = item.updateDaily();
 
+      expect(item.category).toBe(CATEGORY.REGULAR);
       expect(item.quality).toBe(9);
       expect(item.sellIn).toBe(4);
       expect(result).toBeUndefined();
@@ -51,6 +52,7 @@ describe('Given updateDaily', () => {
 
       item.updateDaily();
 
+      expect(item.category).toBe(CATEGORY.AGES);
       expect(item.quality).toBe(21);
       expect(item.sellIn).toBe(4);
     });
@@ -62,6 +64,7 @@ describe('Given updateDaily', () => {
 
       item.updateDaily();
 
+      expect(item.category).toBe(CATEGORY.BACKSTAGE_PASSES);
       expect(item.quality).toBe(23);
       expect(item.sellIn).toBe(4);
     });
@@ -73,6 +76,7 @@ describe('Given updateDaily', () => {
 
       item.updateDaily();
 
+      expect(item.category).toBe(CATEGORY.LEGENDARY);
       expect(item.quality).toBe(80);
       expect(item.sellIn).toBe(-1);
     });
@@ -84,6 +88,7 @@ describe('Given updateDaily', () => {
 
       item.updateDaily();
 
+      expect(item.category).toBe(CATEGORY.CONJURED);
       expect(item.quality).toBe(8);
       expect(item.sellIn).toBe(4);
     });
@@ -175,6 +180,11 @@ describe('Given updateDaily', () => {
       expect(item.sellIn).toBe(0);
 
       item.category = CATEGORY.AGES;
+
+      expect(item.category).toBe(CATEGORY.AGES);
+      expect(item.quality).toBe(9);
+      expect(item.sellIn).toBe(0);
+
       item.name = 'Brie';
       item.updateDaily();
 
@@ -182,6 +192,29 @@ describe('Given updateDaily', () => {
       expect(item.sellIn).toBe(-1);
       expect(item.category).toBe(CATEGORY.AGES);
       expect(item.name).toBe('Brie');
+    });
+  });
+});
+
+describe('Given updateDaily for items of the same Category', () => {
+  describe('When two Regular items have different qualities and deadlines', () => {
+    it('Then evolves each item independently of the other', () => {
+      const bread = new Item('Bread', 1, 10, CATEGORY.REGULAR);
+      const milk = new Item('Milk', 0, 20, CATEGORY.REGULAR);
+
+      bread.updateDaily();
+
+      expect(bread.quality).toBe(9);
+      expect(bread.sellIn).toBe(0);
+      expect(milk.quality).toBe(20);
+      expect(milk.sellIn).toBe(0);
+
+      milk.updateDaily();
+
+      expect(milk.quality).toBe(18);
+      expect(milk.sellIn).toBe(-1);
+      expect(bread.quality).toBe(9);
+      expect(bread.sellIn).toBe(0);
     });
   });
 });

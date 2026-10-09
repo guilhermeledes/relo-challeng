@@ -1,3 +1,4 @@
+import type { Category } from '../category';
 import type { Quality } from '../quality';
 
 export interface DailyItemState {
@@ -6,5 +7,6 @@ export interface DailyItemState {
 }
 
 export interface CategoryStrategy {
+  readonly category: Category;
   update(state: DailyItemState): DailyItemState;
 }

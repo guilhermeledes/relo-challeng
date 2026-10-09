@@ -118,3 +118,26 @@ describe('RegularCategoryStrategy', () => {
     });
   });
 });
+
+describe('Given Regular Category identification', () => {
+  describe('When a Regular Strategy is created', () => {
+    it('Then identifies itself as Regular', () => {
+      const strategy = new RegularCategoryStrategy();
+
+      expect(strategy.category).toBe('Regular');
+    });
+  });
+});
+
+describe('Given Regular Category identification', () => {
+  describe('When replacing its Category is attempted', () => {
+    it('Then rejects the write and preserves Regular', () => {
+      const strategy = new RegularCategoryStrategy();
+
+      const written = Reflect.set(strategy, 'category', 'Ages');
+
+      expect(written).toBe(false);
+      expect(strategy.category).toBe('Regular');
+    });
+  });
+});

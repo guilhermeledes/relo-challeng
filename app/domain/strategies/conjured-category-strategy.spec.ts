@@ -104,3 +104,26 @@ describe('ConjuredCategoryStrategy', () => {
     });
   });
 });
+
+describe('Given Conjured Category identification', () => {
+  describe('When a Conjured Strategy is created', () => {
+    it('Then identifies itself as Conjured', () => {
+      const strategy = new ConjuredCategoryStrategy();
+
+      expect(strategy.category).toBe('Conjured');
+    });
+  });
+});
+
+describe('Given Conjured Category identification', () => {
+  describe('When replacing its Category is attempted', () => {
+    it('Then rejects the write and preserves Conjured', () => {
+      const strategy = new ConjuredCategoryStrategy();
+
+      const written = Reflect.set(strategy, 'category', 'Regular');
+
+      expect(written).toBe(false);
+      expect(strategy.category).toBe('Conjured');
+    });
+  });
+});
