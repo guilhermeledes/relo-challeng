@@ -1,5 +1,5 @@
 import { describe, it, expect } from '@jest/globals';
-import { Item } from '@/gilded-rose';
+import { Item } from '@/domain/item';
 
 describe('Item', () => {
   it('sets name from the constructor', () => {

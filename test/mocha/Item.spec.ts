@@ -1,6 +1,6 @@
 import { describe, it } from 'mocha';
 import { expect } from 'chai';
-import { Item } from '@/gilded-rose';
+import { Item } from '@/domain/item';
 
 describe('Item', () => {
   it('sets name from the constructor', () => {

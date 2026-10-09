@@ -1,6 +1,7 @@
 import { describe, it } from 'mocha';
 import { expect } from 'chai';
-import { GildedRose, type Item } from '@/gilded-rose';
+import { GildedRose } from '@/gilded-rose';
+import type { Item } from '@/domain/item';
 
 function createItemMock(name: string = 'foo', sellIn: number = 10, quality: number = 10): Item {
   return { name, sellIn, quality } as Item;

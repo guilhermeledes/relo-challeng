@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { CATEGORY, Item } from '@/gilded-rose';
+import { CATEGORY } from '@/domain/category';
+import { Item } from '@/domain/item';
 
 describe('Item', () => {
   it('sets name from the constructor', () => {

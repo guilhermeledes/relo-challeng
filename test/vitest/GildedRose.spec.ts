@@ -1,5 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { CATEGORY, Category, GildedRose, Item } from '@/gilded-rose';
+import { GildedRose } from '@/gilded-rose';
+import { CATEGORY, type Category } from '@/domain/category';
+import { Item } from '@/domain/item';
 
 function createItemMock(name: string = 'foo', sellIn: number = 10, quality: number = 10, category?: Category): Item {
   return new Item(name, sellIn, quality, category);
