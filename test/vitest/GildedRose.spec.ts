@@ -56,6 +56,20 @@ describe('GildedRose', () => {
         });
       });
     });
+
+    describe('given an expired item with quality 1', () => {
+      describe('when the inventory is updated', () => {
+        it('then keeps quality at zero and decreases sellIn', () => {
+          const itemMock = createItemMock('foo', 0, 1);
+          const sut = new GildedRose([itemMock]);
+
+          const [item] = sut.updateInventory();
+
+          expect(item.quality).toBe(0);
+          expect(item.sellIn).toBe(-1);
+        });
+      });
+    });
   });
 
   describe('Aged Brie', () => {
