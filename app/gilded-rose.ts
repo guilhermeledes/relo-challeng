@@ -142,6 +142,12 @@ export class BackstagePassesCategoryStrategy implements CategoryStrategy {
   }
 }
 
+export class LegendaryCategoryStrategy implements CategoryStrategy {
+  update(_item: Item): void {
+    // Legendary items keep their quality and deadline unchanged.
+  }
+}
+
 class LegacyCategoryStrategy implements CategoryStrategy {
   update(item: Item): void {
     if (item.category === CATEGORY.LEGENDARY) {
@@ -159,7 +165,7 @@ const categoryStrategies: Record<Category, CategoryStrategy> = {
   [CATEGORY.REGULAR]: new RegularCategoryStrategy(),
   [CATEGORY.AGES]: new AgedCategoryStrategy(),
   [CATEGORY.BACKSTAGE_PASSES]: new BackstagePassesCategoryStrategy(),
-  [CATEGORY.LEGENDARY]: legacyStrategy,
+  [CATEGORY.LEGENDARY]: new LegendaryCategoryStrategy(),
 };
 
 export class GildedRose {
