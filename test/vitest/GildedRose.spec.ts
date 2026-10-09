@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { GildedRose, type Item } from '@/gilded-rose';
+import { Category, GildedRose, Item } from '@/gilded-rose';
 
-function createItemMock(name: string = 'foo', sellIn: number = 10, quality: number = 10): Item {
-  return { name, sellIn, quality } as Item;
+function createItemMock(name: string = 'foo', sellIn: number = 10, quality: number = 10, category: Category = 'Regular'): Item {
+  return new Item(name, sellIn, quality, category);
 }
 
 describe('GildedRose', () => {
@@ -11,7 +11,7 @@ describe('GildedRose', () => {
       const itemMock = createItemMock('foo', 5, 10);
       const sut = new GildedRose([itemMock]);
 
-      const [item] = sut.updateQuality();
+      const [item] = sut.updateInventory();
 
       expect(item.quality).toBe(9);
     });
@@ -20,7 +20,7 @@ describe('GildedRose', () => {
       const itemMock = createItemMock('foo', 5, 10);
       const sut = new GildedRose([itemMock]);
 
-      const [item] = sut.updateQuality();
+      const [item] = sut.updateInventory();
 
       expect(item.sellIn).toBe(4);
     });
@@ -29,16 +29,16 @@ describe('GildedRose', () => {
       const itemMock = createItemMock('foo', 5, 0);
       const sut = new GildedRose([itemMock]);
 
-      const [item] = sut.updateQuality();
+      const [item] = sut.updateInventory();
 
       expect(item.quality).toBe(0);
     });
 
     it('quality degrades by 1 when there is one day remaining', () => {
-      const itemMock = createItemMock('foo', 0, 10);
+      const itemMock = createItemMock('foo', 1, 10);
       const sut = new GildedRose([itemMock]);
 
-      const [item] = sut.updateQuality();
+      const [item] = sut.updateInventory();
 
       expect(item.quality).toBe(9);
     });
@@ -49,7 +49,7 @@ describe('GildedRose', () => {
       const itemMock = createItemMock('Aged Brie', 5, 20);
       const sut = new GildedRose([itemMock]);
 
-      const [item] = sut.updateQuality();
+      const [item] = sut.updateInventory();
 
       expect(item.quality).toBe(21);
     });
@@ -58,7 +58,7 @@ describe('GildedRose', () => {
       const itemMock = createItemMock('Aged Brie', 0, 20);
       const sut = new GildedRose([itemMock]);
 
-      const [item] = sut.updateQuality();
+      const [item] = sut.updateInventory();
 
       expect(item.quality).toBe(22);
     });
@@ -67,7 +67,7 @@ describe('GildedRose', () => {
       const itemMock = createItemMock('Aged Brie', 5, 50);
       const sut = new GildedRose([itemMock]);
 
-      const [item] = sut.updateQuality();
+      const [item] = sut.updateInventory();
 
       expect(item.quality).toBe(50);
     });
@@ -78,7 +78,7 @@ describe('GildedRose', () => {
       const itemMock = createItemMock('Backstage passes to a TAFKAL80ETC concert', 15, 20);
       const sut = new GildedRose([itemMock]);
 
-      const [item] = sut.updateQuality();
+      const [item] = sut.updateInventory();
 
       expect(item.quality).toBe(21);
     });
@@ -87,7 +87,7 @@ describe('GildedRose', () => {
       const itemMock = createItemMock('Backstage passes to a TAFKAL80ETC concert', 10, 20);
       const sut = new GildedRose([itemMock]);
 
-      const [item] = sut.updateQuality();
+      const [item] = sut.updateInventory();
 
       expect(item.quality).toBe(22);
     });
@@ -96,7 +96,7 @@ describe('GildedRose', () => {
       const itemMock = createItemMock('Backstage passes to a TAFKAL80ETC concert', 5, 20);
       const sut = new GildedRose([itemMock]);
 
-      const [item] = sut.updateQuality();
+      const [item] = sut.updateInventory();
 
       expect(item.quality).toBe(23);
     });
@@ -105,7 +105,7 @@ describe('GildedRose', () => {
       const itemMock = createItemMock('Backstage passes to a TAFKAL80ETC concert', 0, 20);
       const sut = new GildedRose([itemMock]);
 
-      const [item] = sut.updateQuality();
+      const [item] = sut.updateInventory();
 
       expect(item.quality).toBe(0);
     });
@@ -114,7 +114,7 @@ describe('GildedRose', () => {
       const itemMock = createItemMock('Backstage passes to a TAFKAL80ETC concert', 5, 49);
       const sut = new GildedRose([itemMock]);
 
-      const [item] = sut.updateQuality();
+      const [item] = sut.updateInventory();
 
       expect(item.quality).toBe(50);
     });
@@ -125,7 +125,7 @@ describe('GildedRose', () => {
       const itemMock = createItemMock('Sulfuras, Hand of Ragnaros', 5, 80);
       const sut = new GildedRose([itemMock]);
 
-      const [item] = sut.updateQuality();
+      const [item] = sut.updateInventory();
 
       expect(item.quality).toBe(80);
     });
@@ -134,7 +134,7 @@ describe('GildedRose', () => {
       const itemMock = createItemMock('Sulfuras, Hand of Ragnaros', 5, 80);
       const sut = new GildedRose([itemMock]);
 
-      const [item] = sut.updateQuality();
+      const [item] = sut.updateInventory();
 
       expect(item.sellIn).toBe(5);
     });
