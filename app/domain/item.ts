@@ -1,5 +1,5 @@
 import { Quality } from './quality';
-import { CATEGORY, categoryStrategies, type Category } from './strategies/category-strategies';
+import { CATEGORY, updateDailyByCategory, type Category } from './strategies/category-strategies';
 import type { DailyItemState } from './strategies/category-strategy';
 
 export class Item {
@@ -22,7 +22,7 @@ export class Item {
   }
 
   updateDaily(): void {
-    const nextState = categoryStrategies[this.category].update(this.#currentState);
+    const nextState = updateDailyByCategory(this.category, this.#currentState);
     this.#currentState = Object.freeze({ sellIn: nextState.sellIn, quality: nextState.quality });
   }
 }
