@@ -10,15 +10,43 @@ export type Category = typeof CATEGORY[keyof typeof CATEGORY];
 
 export class Item {
   name: string;
-  sellIn: number;
-  quality: number;
+  private currentSellIn: number;
+  private currentQuality: number;
   category: Category;
 
   constructor(name, sellIn, quality, category: Category = CATEGORY.REGULAR) {
     this.name = name;
-    this.sellIn = sellIn;
-    this.quality = quality;
+    this.currentSellIn = sellIn;
+    this.currentQuality = quality;
     this.category = category;
+  }
+
+  get sellIn(): number {
+    return this.currentSellIn;
+  }
+
+  get quality(): number {
+    return this.currentQuality;
+  }
+
+  increaseQuality(amount: number) {
+    if (this.quality < 50) {
+      this.currentQuality = Math.min(50, this.quality + amount);
+    }
+  }
+
+  decreaseQuality(amount: number) {
+    if (this.quality > 0) {
+      this.currentQuality = Math.max(0, this.quality - amount);
+    }
+  }
+
+  resetQuality() {
+    this.currentQuality = 0;
+  }
+
+  decreaseSellIn() {
+    this.currentSellIn -= 1;
   }
 
   updateQuality() {
@@ -31,24 +59,24 @@ export class Item {
   }
 
   updateSellIn() {
-    this.sellIn = this.sellIn - 1;
+    this.decreaseSellIn();
 
     if (this.sellIn < 0) {
 
       if (this.category === CATEGORY.AGES) {
         if (this.quality < 50) {
-          this.quality = this.quality + 1
+          this.increaseQuality(1);
         }
         return
       }
 
       if (this.category === CATEGORY.BACKSTAGE_PASSES) {
-        this.quality = this.quality - this.quality
+        this.resetQuality();
         return
       }
 
       if (this.quality > 0) {
-        this.quality = this.quality - 1
+        this.decreaseQuality(1);
       }
 
     }
@@ -56,22 +84,22 @@ export class Item {
 
   updateRegular() {
     if (this.quality > 0) {
-      this.quality = this.quality - 1
+      this.decreaseQuality(1);
     }
   }
 
   updateNonRegular() {
     if (this.quality < 50) {
-      this.quality = this.quality + 1
+      this.increaseQuality(1);
       if (this.category === CATEGORY.BACKSTAGE_PASSES) {
         if (this.sellIn < 11) {
           if (this.quality < 50) {
-            this.quality = this.quality + 1
+            this.increaseQuality(1);
           }
         }
         if (this.sellIn < 6) {
           if (this.quality < 50) {
-            this.quality = this.quality + 1
+            this.increaseQuality(1);
           }
         }
       }
