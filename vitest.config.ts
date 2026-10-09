@@ -5,7 +5,7 @@ export default defineConfig({
     tsconfigPaths: true,
   },
   test: {
-    include: ['test/vitest/**/*.spec.ts'],
+    include: ['app/**/*.spec.ts', 'test/vitest/**/*.spec.ts'],
     coverage: {
       provider: 'v8',
     },
