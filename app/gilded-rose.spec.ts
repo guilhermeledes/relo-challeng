@@ -1,18 +1,14 @@
-import { describe, it, expect } from 'vitest';
-import { GildedRose } from '@/gilded-rose';
-import { CATEGORY, type Category } from '@/domain/category';
-import { Item } from '@/domain/item';
-
-function createItemMock(name: string = 'foo', sellIn: number = 10, quality: number = 10, category?: Category): Item {
-  return new Item(name, sellIn, quality, category);
-}
+import { describe, expect, it } from 'vitest';
+import { GildedRose } from './gilded-rose';
+import { CATEGORY } from './domain/category';
+import { Item } from './domain/item';
 
 describe('GildedRose', () => {
-  describe('given a conjured item alongside a Regular item with one day remaining', () => {
-    describe('when the inventory is updated on successive days', () => {
+  describe('given updateInventory', () => {
+    describe('when Conjured and default Regular at sellIn 1 and quality 10 across successive days', () => {
       it('then degrades Conjured twice as fast while preserving inventory references', () => {
-        const conjured = createItemMock('foo', 1, 10, CATEGORY.CONJURED);
-        const regular = createItemMock('Conjured Mana Cake', 1, 10);
+        const conjured = new Item('foo', 1, 10, CATEGORY.CONJURED);
+        const regular = new Item('Conjured Mana Cake', 1, 10);
         const items = [conjured, regular];
         const sut = new GildedRose(items);
 
@@ -35,10 +31,8 @@ describe('GildedRose', () => {
         expect(regular.sellIn).toBe(-1);
       });
     });
-  });
 
-  describe('given an empty inventory', () => {
-    describe('when the inventory is updated', () => {
+    describe('when an empty inventory', () => {
       it('then returns the original empty array', () => {
         const items: Item[] = [];
         const sut = new GildedRose(items);
@@ -49,16 +43,15 @@ describe('GildedRose', () => {
         expect(result).toEqual([]);
       });
     });
-  });
 
-  describe('given an inventory containing all existing categories', () => {
-    describe('when the inventory is updated', () => {
+    describe('when all five categories with Regular and Ages at sellIn 0, quality 10 and 20; BackstagePasses at sellIn 5, quality 20; Legendary at sellIn 0, quality 80; Conjured at sellIn 0, quality 10', () => {
       it('then updates each item in place while preserving every reference', () => {
-        const regular = createItemMock('foo', 0, 10, CATEGORY.REGULAR);
-        const aged = createItemMock('Aged Brie', 0, 20, CATEGORY.AGES);
-        const backstage = createItemMock('Backstage passes', 5, 20, CATEGORY.BACKSTAGE_PASSES);
-        const legendary = createItemMock('Sulfuras', 0, 80, CATEGORY.LEGENDARY);
-        const items = [regular, aged, backstage, legendary];
+        const regular = new Item('foo', 0, 10, CATEGORY.REGULAR);
+        const aged = new Item('Aged Brie', 0, 20, CATEGORY.AGES);
+        const backstage = new Item('Backstage passes', 5, 20, CATEGORY.BACKSTAGE_PASSES);
+        const legendary = new Item('Sulfuras', 0, 80, CATEGORY.LEGENDARY);
+        const conjured = new Item('Conjured Mana Cake', 0, 10, CATEGORY.CONJURED);
+        const items = [regular, aged, backstage, legendary, conjured];
         const sut = new GildedRose(items);
 
         const result = sut.updateInventory();
@@ -68,6 +61,7 @@ describe('GildedRose', () => {
         expect(result[1]).toBe(aged);
         expect(result[2]).toBe(backstage);
         expect(result[3]).toBe(legendary);
+        expect(result[4]).toBe(conjured);
         expect(regular.quality).toBe(8);
         expect(regular.sellIn).toBe(-1);
         expect(aged.quality).toBe(22);
@@ -76,18 +70,19 @@ describe('GildedRose', () => {
         expect(backstage.sellIn).toBe(4);
         expect(legendary.quality).toBe(80);
         expect(legendary.sellIn).toBe(0);
+        expect(conjured.quality).toBe(6);
+        expect(conjured.sellIn).toBe(-1);
       });
     });
-  });
 
-  describe('given an inventory with one day remaining for every category', () => {
-    describe('when the inventory is updated on successive days', () => {
+    describe('when all five categories at sellIn 1 with Regular and Conjured quality 10, Ages and BackstagePasses quality 20, and Legendary quality 80 across successive days', () => {
       it('then applies expiration only after each final unexpired day', () => {
-        const regular = createItemMock('foo', 1, 10, CATEGORY.REGULAR);
-        const aged = createItemMock('Aged Brie', 1, 20, CATEGORY.AGES);
-        const backstage = createItemMock('Backstage passes', 1, 20, CATEGORY.BACKSTAGE_PASSES);
-        const legendary = createItemMock('Sulfuras', 1, 80, CATEGORY.LEGENDARY);
-        const sut = new GildedRose([regular, aged, backstage, legendary]);
+        const regular = new Item('foo', 1, 10, CATEGORY.REGULAR);
+        const aged = new Item('Aged Brie', 1, 20, CATEGORY.AGES);
+        const backstage = new Item('Backstage passes', 1, 20, CATEGORY.BACKSTAGE_PASSES);
+        const legendary = new Item('Sulfuras', 1, 80, CATEGORY.LEGENDARY);
+        const conjured = new Item('Conjured Mana Cake', 1, 10, CATEGORY.CONJURED);
+        const sut = new GildedRose([regular, aged, backstage, legendary, conjured]);
 
         sut.updateInventory();
 
@@ -99,6 +94,8 @@ describe('GildedRose', () => {
         expect(backstage.sellIn).toBe(0);
         expect(legendary.quality).toBe(80);
         expect(legendary.sellIn).toBe(1);
+        expect(conjured.quality).toBe(8);
+        expect(conjured.sellIn).toBe(0);
 
         sut.updateInventory();
 
@@ -110,16 +107,16 @@ describe('GildedRose', () => {
         expect(backstage.sellIn).toBe(-1);
         expect(legendary.quality).toBe(80);
         expect(legendary.sellIn).toBe(1);
+        expect(conjured.quality).toBe(4);
+        expect(conjured.sellIn).toBe(-1);
       });
     });
-  });
 
-  describe('given commercial names with an explicit Regular category', () => {
-    describe('when the inventory is updated', () => {
+    describe('when Aged Brie, Backstage passes and Sulfuras names with explicit Regular category, sellIn 5 and quality 20', () => {
       it('then degrades every item according to its category rather than its name', () => {
-        const agedName = createItemMock('Aged Brie', 5, 20, CATEGORY.REGULAR);
-        const backstageName = createItemMock('Backstage passes to a TAFKAL80ETC concert', 5, 20, CATEGORY.REGULAR);
-        const legendaryName = createItemMock('Sulfuras, Hand of Ragnaros', 5, 20, CATEGORY.REGULAR);
+        const agedName = new Item('Aged Brie', 5, 20, CATEGORY.REGULAR);
+        const backstageName = new Item('Backstage passes to a TAFKAL80ETC concert', 5, 20, CATEGORY.REGULAR);
+        const legendaryName = new Item('Sulfuras, Hand of Ragnaros', 5, 20, CATEGORY.REGULAR);
         const sut = new GildedRose([agedName, backstageName, legendaryName]);
 
         sut.updateInventory();
@@ -132,14 +129,12 @@ describe('GildedRose', () => {
         expect(legendaryName.sellIn).toBe(4);
       });
     });
-  });
 
-  describe('given ordinary names with explicit special categories', () => {
-    describe('when the inventory is updated', () => {
+    describe('when ordinary names with Ages and BackstagePasses at sellIn 5, quality 20 and Legendary at sellIn 5, quality 80', () => {
       it('then applies aging, backstage and legendary rules despite their ordinary names', () => {
-        const aged = createItemMock('foo', 5, 20, CATEGORY.AGES);
-        const backstage = createItemMock('bar', 5, 20, CATEGORY.BACKSTAGE_PASSES);
-        const legendary = createItemMock('baz', 5, 80, CATEGORY.LEGENDARY);
+        const aged = new Item('foo', 5, 20, CATEGORY.AGES);
+        const backstage = new Item('bar', 5, 20, CATEGORY.BACKSTAGE_PASSES);
+        const legendary = new Item('baz', 5, 80, CATEGORY.LEGENDARY);
         const sut = new GildedRose([aged, backstage, legendary]);
 
         sut.updateInventory();
