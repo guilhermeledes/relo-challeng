@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { Category, GildedRose, Item } from '@/gilded-rose';
+import { CATEGORY, Category, GildedRose, Item } from '@/gilded-rose';
 
-function createItemMock(name: string = 'foo', sellIn: number = 10, quality: number = 10, category: Category = 'Regular'): Item {
+function createItemMock(name: string = 'foo', sellIn: number = 10, quality: number = 10, category: Category = CATEGORY.REGULAR): Item {
   return new Item(name, sellIn, quality, category);
 }
 
@@ -46,7 +46,7 @@ describe('GildedRose', () => {
 
   describe('Aged Brie', () => {
     it('increases quality by 1 per day', () => {
-      const itemMock = createItemMock('Aged Brie', 5, 20, 'Ages');
+      const itemMock = createItemMock('Aged Brie', 5, 20, CATEGORY.AGES);
       const sut = new GildedRose([itemMock]);
 
       const [item] = sut.updateInventory();
@@ -55,7 +55,7 @@ describe('GildedRose', () => {
     });
 
     it('increases quality by 2 after the sell date', () => {
-      const itemMock = createItemMock('Aged Brie', 0, 20, 'Ages');
+      const itemMock = createItemMock('Aged Brie', 0, 20, CATEGORY.AGES);
       const sut = new GildedRose([itemMock]);
 
       const [item] = sut.updateInventory();
@@ -64,7 +64,7 @@ describe('GildedRose', () => {
     });
 
     it('quality never exceeds 50', () => {
-      const itemMock = createItemMock('Aged Brie', 5, 50, 'Ages');
+      const itemMock = createItemMock('Aged Brie', 5, 50, CATEGORY.AGES);
       const sut = new GildedRose([itemMock]);
 
       const [item] = sut.updateInventory();
@@ -75,7 +75,7 @@ describe('GildedRose', () => {
 
   describe('Backstage passes to a TAFKAL80ETC concert', () => {
     it('increases quality by 1 when more than 10 days remain', () => {
-      const itemMock = createItemMock('Backstage passes to a TAFKAL80ETC concert', 15, 20, 'Ages');
+      const itemMock = createItemMock('Backstage passes to a TAFKAL80ETC concert', 15, 20, CATEGORY.BACKSTAGE_PASSES);
       const sut = new GildedRose([itemMock]);
 
       const [item] = sut.updateInventory();
@@ -84,7 +84,7 @@ describe('GildedRose', () => {
     });
 
     it('increases quality by 2 when 10 or fewer days remain', () => {
-      const itemMock = createItemMock('Backstage passes to a TAFKAL80ETC concert', 10, 20, 'Ages');
+      const itemMock = createItemMock('Backstage passes to a TAFKAL80ETC concert', 10, 20, CATEGORY.BACKSTAGE_PASSES);
       const sut = new GildedRose([itemMock]);
 
       const [item] = sut.updateInventory();
@@ -93,7 +93,7 @@ describe('GildedRose', () => {
     });
 
     it('increases quality by 3 when 5 or fewer days remain', () => {
-      const itemMock = createItemMock('Backstage passes to a TAFKAL80ETC concert', 5, 20, 'Ages');
+      const itemMock = createItemMock('Backstage passes to a TAFKAL80ETC concert', 5, 20, CATEGORY.BACKSTAGE_PASSES);
       const sut = new GildedRose([itemMock]);
 
       const [item] = sut.updateInventory();
@@ -102,7 +102,7 @@ describe('GildedRose', () => {
     });
 
     it('quality drops to 0 after the concert', () => {
-      const itemMock = createItemMock('Backstage passes to a TAFKAL80ETC concert', 0, 20, 'Ages');
+      const itemMock = createItemMock('Backstage passes to a TAFKAL80ETC concert', 0, 20, CATEGORY.BACKSTAGE_PASSES);
       const sut = new GildedRose([itemMock]);
 
       const [item] = sut.updateInventory();
@@ -111,7 +111,7 @@ describe('GildedRose', () => {
     });
 
     it('quality never exceeds 50', () => {
-      const itemMock = createItemMock('Backstage passes to a TAFKAL80ETC concert', 5, 49, 'Ages');
+      const itemMock = createItemMock('Backstage passes to a TAFKAL80ETC concert', 5, 49, CATEGORY.BACKSTAGE_PASSES);
       const sut = new GildedRose([itemMock]);
 
       const [item] = sut.updateInventory();
@@ -122,7 +122,7 @@ describe('GildedRose', () => {
 
   describe('Sulfuras, Hand of Ragnaros', () => {
     it('quality never changes', () => {
-      const itemMock = createItemMock('Sulfuras, Hand of Ragnaros', 5, 80, 'Legendary');
+      const itemMock = createItemMock('Sulfuras, Hand of Ragnaros', 5, 80, CATEGORY.LEGENDARY);
       const sut = new GildedRose([itemMock]);
 
       const [item] = sut.updateInventory();
@@ -131,7 +131,7 @@ describe('GildedRose', () => {
     });
 
     it('sellIn never changes', () => {
-      const itemMock = createItemMock('Sulfuras, Hand of Ragnaros', 5, 80, 'Legendary');
+      const itemMock = createItemMock('Sulfuras, Hand of Ragnaros', 5, 80, CATEGORY.LEGENDARY);
       const sut = new GildedRose([itemMock]);
 
       const [item] = sut.updateInventory();

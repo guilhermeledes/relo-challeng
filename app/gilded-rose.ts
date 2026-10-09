@@ -1,4 +1,12 @@
-export type Category = 'Legendary' | 'Ages' | 'Regular';
+
+export const CATEGORY = {
+  LEGENDARY: 'Legendary',
+  AGES: 'Ages',
+  BACKSTAGE_PASSES: 'BackstagePasses',
+  REGULAR: 'Regular',
+} as const;
+
+export type Category = typeof CATEGORY[keyof typeof CATEGORY];
 
 export class Item {
   name: string;
@@ -14,10 +22,10 @@ export class Item {
   }
 
   updateQuality() {
-    if (this.category === 'Legendary') {
+    if (this.category === CATEGORY.LEGENDARY) {
       return;
     }
-    if (this.category === 'Regular') {
+    if (this.category === CATEGORY.REGULAR) {
       this.updateRegular();
     } else {
       this.updateAged();
@@ -30,14 +38,14 @@ export class Item {
 
     if (this.sellIn < 0) {
 
-      if (this.name === 'Aged Brie') {
+      if (this.category === CATEGORY.AGES) {
         if (this.quality < 50) {
           this.quality = this.quality + 1
         }
         return
       }
 
-      if (this.name === 'Backstage passes to a TAFKAL80ETC concert') {
+      if (this.category === CATEGORY.BACKSTAGE_PASSES) {
         this.quality = this.quality - this.quality
         return
       }
@@ -58,7 +66,7 @@ export class Item {
   updateAged() {
     if (this.quality < 50) {
       this.quality = this.quality + 1
-      if (this.name == 'Backstage passes to a TAFKAL80ETC concert') {
+      if (this.category === CATEGORY.BACKSTAGE_PASSES) {
         if (this.sellIn < 11) {
           if (this.quality < 50) {
             this.quality = this.quality + 1
