@@ -22,15 +22,11 @@ export class Item {
   }
 
   updateQuality() {
-    if (this.category === CATEGORY.LEGENDARY) {
-      return;
-    }
     if (this.category === CATEGORY.REGULAR) {
       this.updateRegular();
     } else {
       this.updateAged();
     }
-    this.updateSellIn();
   }
 
   updateSellIn() {
@@ -91,9 +87,14 @@ export class GildedRose {
   }
 
   updateInventory() {
-    for (let i = 0; i < this.items.length; i++) {
-      this.items[i].updateQuality();
-    }
+    this.items.forEach(item => {
+      if (item.category === CATEGORY.LEGENDARY) {
+        return;
+      }
+      item.updateQuality();
+      item.updateSellIn();
+    });
+
     return this.items;
   }
 
