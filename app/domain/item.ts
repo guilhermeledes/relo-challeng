@@ -1,18 +1,16 @@
 import { CATEGORY, type Category } from './category';
-
-const MIN_QUALITY = 0;
-const MAX_NORMAL_QUALITY = 50;
+import { Quality } from './quality';
 
 export class Item {
   name: string;
   #currentSellIn: number;
-  #currentQuality: number;
+  #currentQuality: Quality;
   category: Category;
 
   constructor(name: string, sellIn: number, quality: number, category: Category = CATEGORY.REGULAR) {
     this.name = name;
     this.#currentSellIn = sellIn;
-    this.#currentQuality = quality;
+    this.#currentQuality = new Quality(quality);
     this.category = category;
   }
 
@@ -21,23 +19,19 @@ export class Item {
   }
 
   get quality(): number {
-    return this.#currentQuality;
+    return this.#currentQuality.value;
   }
 
   increaseQuality(amount: number) {
-    if (this.quality < MAX_NORMAL_QUALITY) {
-      this.#currentQuality = Math.min(MAX_NORMAL_QUALITY, this.quality + amount);
-    }
+    this.#currentQuality = this.#currentQuality.increase(amount);
   }
 
   decreaseQuality(amount: number) {
-    if (this.quality > MIN_QUALITY) {
-      this.#currentQuality = Math.max(MIN_QUALITY, this.quality - amount);
-    }
+    this.#currentQuality = this.#currentQuality.decrease(amount);
   }
 
   resetQuality() {
-    this.#currentQuality = MIN_QUALITY;
+    this.#currentQuality = this.#currentQuality.reset();
   }
 
   decreaseSellIn() {
