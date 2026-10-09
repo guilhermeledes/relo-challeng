@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { Item } from '@/gilded-rose';
+import { CATEGORY, Item } from '@/gilded-rose';
 
 describe('Item', () => {
   it('sets name from the constructor', () => {
@@ -18,5 +18,15 @@ describe('Item', () => {
     const item = new Item('Aged Brie', 5, 10);
 
     expect(item.quality).toBe(10);
+  });
+
+  describe('given no category is supplied', () => {
+    describe('when an item is constructed', () => {
+      it('then defaults to the Regular category', () => {
+        const item = new Item('Aged Brie', 5, 10);
+
+        expect(item.category).toBe(CATEGORY.REGULAR);
+      });
+    });
   });
 });

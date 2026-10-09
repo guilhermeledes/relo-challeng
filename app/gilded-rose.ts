@@ -14,7 +14,7 @@ export class Item {
   quality: number;
   category: Category;
 
-  constructor(name, sellIn, quality, category: Category) {
+  constructor(name, sellIn, quality, category: Category = CATEGORY.REGULAR) {
     this.name = name;
     this.sellIn = sellIn;
     this.quality = quality;

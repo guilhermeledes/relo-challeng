@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { CATEGORY, Category, GildedRose, Item } from '@/gilded-rose';
 
-function createItemMock(name: string = 'foo', sellIn: number = 10, quality: number = 10, category: Category = CATEGORY.REGULAR): Item {
+function createItemMock(name: string = 'foo', sellIn: number = 10, quality: number = 10, category?: Category): Item {
   return new Item(name, sellIn, quality, category);
 }
 
